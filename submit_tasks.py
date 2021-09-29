@@ -55,7 +55,7 @@ def submit_runs(df, task="climpact"):
         keys = {k: v for k, v in zip(groupby_attrs, name)}
     
         # Name of the PBS job
-        name = f"{task}.{keys['domain']}.{keys['driving_model']}.{keys['experiment']}.{keys['rcm_name']}"
+        pbs_name = f"{task}.{keys['domain']}.{keys['driving_model']}.{keys['experiment']}.{keys['rcm_name']}"
 
         # Work out the output filename, grabbing the dates of the first and last input files
         r1 = group.iloc[0]
@@ -98,7 +98,7 @@ def submit_runs(df, task="climpact"):
 
             # Skip non-historical runs that don't have thresholds available
             elif not os.path.exists(os.path.join(output_dir, hist_runid, "thresholds.done")):
-                print(f"Waiting on thresholds {runid}")
+                print(f"Waiting on thresholds {runid} {hist_runid}")
                 continue
 
         else: # task == "thresholds"
@@ -109,7 +109,7 @@ def submit_runs(df, task="climpact"):
         os.makedirs(os.path.join(output_dir, runid), exist_ok=True)
         command = [
             "/opt/pbs/default/bin/qsub",
-            "-N", name,
+            "-N", pbs_name,
             "-v",
             ','.join([f"pr={pr}",
             f"tasmin={tasmin}",
@@ -126,7 +126,6 @@ def submit_runs(df, task="climpact"):
         with open(os.path.join(output_dir, runid, f"{task}.waiting"), 'w') as f:
             subprocess.run(command, check=True, stdout=f)
 
-        break
 
 df = matches.df
 
