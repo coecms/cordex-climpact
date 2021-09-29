@@ -55,7 +55,7 @@ def submit_runs(df, task="climpact"):
         keys = {k: v for k, v in zip(groupby_attrs, name)}
     
         # Name of the PBS job
-        name = f"{task} {keys['domain']} {keys['driving_model']} {keys['experiment']} {keys['rcm_name']}"
+        name = f"{task}.{keys['domain']}.{keys['driving_model']}.{keys['experiment']}.{keys['rcm_name']}"
 
         # Work out the output filename, grabbing the dates of the first and last input files
         r1 = group.iloc[0]
@@ -102,7 +102,7 @@ def submit_runs(df, task="climpact"):
                 continue
 
         else: # task == "thresholds"
-            thresholds == ''
+            thresholds = ''
 
         # Submit the job
         print(f"Submitting {task} {runid}")
@@ -125,6 +125,8 @@ def submit_runs(df, task="climpact"):
 
         with open(os.path.join(output_dir, runid, f"{task}.waiting"), 'w') as f:
             subprocess.run(command, check=True, stdout=f)
+
+        break
 
 df = matches.df
 

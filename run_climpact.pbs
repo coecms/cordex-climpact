@@ -32,7 +32,7 @@ tasmax_pp=$PBS_JOBFS/tasmax.nc
 ./preprocess.py $pr $pr_pp
 
 if [ "$task" == "thresholds" ]; then
-    Rscript climpact2.ncdf.thresholds.wrapper.r "$tasmin_pp" "$tasmax_pp" "$pr_pp" "$threshold_dir/thresholds.nc"
+    Rscript climpact2.ncdf.thresholds.wrapper.r "$tasmin_pp" "$tasmax_pp" "$pr_pp" "$output_dir/thresholds.nc"
 
 else
 
