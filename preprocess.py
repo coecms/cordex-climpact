@@ -24,7 +24,9 @@ cat = intake.cat.nci.esgf.cordex
 
 print(cat[var].df.path.values)
 
-ds = cat[var].to_dask()
+sel = cat[var]
+sel.cdf_kwargs = {'decode_times': False, 'chunks': {}}
+ds = sel.to_dask()
 
 bnds = []
 
@@ -48,7 +50,7 @@ for name, var in ds.items():
     var.attrs.pop('grid_mapping', None)
 
     # Change units
-    if var.attrs['units'] == 'mm':
+    if var.attrs.get('units', None) == 'mm':
         var.attrs['units'] = 'kg m-2 d-1'
 
 if 'crs' in ds:

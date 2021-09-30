@@ -22,7 +22,7 @@ import shlex
 cat = intake.cat.nci.esgf.cordex
 
 # Directory to store outputs in (also change the `list_*.sh` scripts to match so they can see the outputs)
-output_dir = "/scratch/w40/saw562/tmp/cordex-test"
+output_dir = "/g/data/w40/saw562/climpact_indices/cordex_batch/"
 
 # Cordex search terms. Possible keys are:
 #    project
@@ -40,8 +40,9 @@ output_dir = "/scratch/w40/saw562/tmp/cordex-test"
 matches = cat.search(
     project="cordex",
     domain=["AUS-44i"],
-    experiment=["historical", "rcp8.5"],
+    experiment=["historical", "rcp85"],
     time_frequency="day",
+    ensemble="r1i1p1",
     variable=["pr", "tasmin", "tasmax"],
 )
 
@@ -116,7 +117,7 @@ def submit_runs(df, task="climpact"):
             f"tasmax={tasmax}",
             f"name={runid}",
             f"task={task}",
-            f"output_dir={output_dir}/{runid}",
+            f"output_dir={os.path.join(output_dir,runid)}",
             f"file_suffix={file_template}",
             f"thresholds={thresholds}"]),
             "-o", f"{output_dir}/{runid}/{task}.log",
